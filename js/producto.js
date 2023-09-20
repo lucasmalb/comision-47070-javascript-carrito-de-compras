@@ -1,79 +1,123 @@
-const jugadores = [
-    {
-        nombre: 'Lionel Messi',
-        posicision: 'Delantero',
-        valor: 400000,
-        estado: 'intranferible',
-        club: 'inter de miami',
-    },
-    {
-        nombre: 'Diego Maradona',
-        posicion: 'delantero', 
-        valor: 380000,
-        estado: 'no cedible',
-        club: 'Napoli',
-    },
-    {
-        nombre: 'Ronaldo Nazario',
-        posicision: 'Delantero',
-        valor: 180000,
-        estado : 'libre',
-        club: 'sin club',
-    },
-    {
-        nombre: 'Iker Casillas',
-        posicision: 'arquero',
-        valor: 120000,
-        estado : 'cedible',
-        club: 'Porto',
-    },
-    {
-        nombre: 'Eder Militao',
-        posicision: 'defensa',
-        valor: 350000,
-        estado : 'intranferible',
-        club: 'Real Madrid',
-    },
-    {
-        nombre: 'Arturo Vidal',
-        posicision: 'mediocampista',
-        valor: 70000,
-        estado : 'en prestamo',
-        club: 'Flamengo',
-    },
-    {
-        nombre: 'Mateo Kovacik',
-        posicision: 'medicampista',
-        valor: 110000,
-        estado : 'en venta',
-        club: 'chelsea',
-    },
-    {
-        nombre: "N'golo Kante",
-        posicision: 'Mediocampista',
-        valor: 160000,
-        estado : 'libre',
-        club: 'sin club',
-    },
-    {
-        nombre: 'Killiam Mbappe',
-        posicision: 'Delantero',
-        valor: 450000,
-        estado : '6 meses termina su contrato',
-        club: 'Paris Saint Germain',
-    },
-    {
-        nombre: 'Cristiano Ronaldo',
-        posicision: 'Delantero',
-        valor: 220000,
-        estado : 'cedible',
-        club: ' Al-Nassr ',
-    },
-    
-]
+
+let nombre = '';
+let posicion = '';
+let valor = 400000;
+let estado = '';
+let club = '';
 
 function mostrarjugadores (jugadores){
     jugadores.forEach(jugador => console.log (jugador.nombre + ' - ' + jugador.posicion + ' - ' + jugador.valor + '-' + jugador.nombre + ' - ' + jugador.estado + ' - ' + jugador.club + ' - '))   
     };
 
-mostrarjugadores (jugadores);
+    function filtrarjugadores (){
+        const resultado = jugadores.filter (filtrarnombre).filter (filtrarposicion).filter (filtrarvalor).filter (filtrarestado).filter (filtrarclub).filter
+            if (resultado.length > 0){
+                mostrarjugadores (resultado)
+            }
+            else{
+                console.log ('no se ha encontrado el jugador');
+            }
+        }
+    
+        function filtrarnombre (jugador){
+            if (nombre){
+                return jugador.nombre == nombre
+            }
+            else {
+                return jugador
+            };
+
+        }
+        function filtrarposicion (jugador){
+            if (posicion){
+                return jugador.posicion == posicion
+            }
+            else {
+                return jugador
+            };
+
+        }
+        function filtrarvalor (jugador){
+            if (valor){
+                return jugador.valor == valor
+            }
+            else {
+                return jugador
+            };
+
+        }
+        function filtrarestado (jugador){
+            if (estado){
+                return jugador.estado == estado
+            }
+            else {
+                return jugador
+            };
+
+        }
+        function filtrarclub (jugador){
+            if (club){
+                return jugador.club == club
+            }
+            else {
+                return jugador
+            };
+
+            
+    
+        }
+        function encontrarjugadores (){
+            const resultado2 = jugadores.find (encontrarnombre).find (encontrarposicion).find (encontrarvalor).find (encontrarestado).find (encontrarclub)
+                if (resultado2.length > 0){
+                    mostrarjugadores (resultado2)
+                }
+                else{
+                    console.log ('no se ha encontrado el jugador');
+                }
+            }
+        
+            function encontrarnombre (jugador){
+                if (nombre){
+                    return jugador.nombre == nombre
+                }
+                else {
+                    return jugador
+                };
+    
+            }
+            function encontrarposicion (jugador){
+                if (posicion){
+                    return jugador.posicion == posicion
+                }
+                else {
+                    return jugador
+                };
+    
+            }
+            function encontrarvalor (jugador){
+                if (valor){
+                    return jugador.valor == valor
+                }
+                else {
+                    return jugador
+                };
+    
+            }
+            function encontrarestado (jugador){
+                if (estado){
+                    return jugador.estado == estado
+                }
+                else {
+                    return jugador
+                };
+    
+            }
+            function encontrarclub (jugador){
+                if (club){
+                    return jugador.club == club
+                }
+                else {
+                    return jugador
+                };
+    
+            }
