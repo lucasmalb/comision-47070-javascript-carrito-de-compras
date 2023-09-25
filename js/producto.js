@@ -1,123 +1,66 @@
 
-let nombre = '';
-let posicion = '';
-let valor = 400000;
-let estado = '';
-let club = '';
 
-function mostrarjugadores (jugadores){
-    jugadores.forEach(jugador => console.log (jugador.nombre + ' - ' + jugador.posicion + ' - ' + jugador.valor + '-' + jugador.nombre + ' - ' + jugador.estado + ' - ' + jugador.club + ' - '))   
-    };
+let nombreJugador = prompt ('indique el nombre del jugadr que desea comprar')
+let posicion = prompt('indique la posicion del jugador')
+let valor = prompt('indique el monto que piensa gastar')
+let estado = prompt('indique en que estado de tranderencia quiere buscar aljugador' + '1 cedible' + '\n'
+    + 'libre' + '\n'
+    + 'en 6 meses termina el contrato' + '\n'
+    + 'en venta' + '\n'
+    + 'en prestamo' + '\n'
+    + 'intransferible' + '\n'
+)
+let club = prompt('indique en que club esta el jugador')
 
-    function filtrarjugadores (){
-        const resultado = jugadores.filter (filtrarnombre).filter (filtrarposicion).filter (filtrarvalor).filter (filtrarestado).filter (filtrarclub).filter
-            if (resultado.length > 0){
-                mostrarjugadores (resultado)
-            }
-            else{
-                console.log ('no se ha encontrado el jugador');
-            }
+
+
+function mostrarjugadores(jugadores) {
+    jugadores.forEach(jugador => console.log(jugador.nombre + ' - ' + jugador.posicion + ' - ' + jugador.valor + '-' + jugador.nombre + ' - ' + jugador.estado + ' - ' + jugador.club + ' - '))
+};
+function filtrarJugadoresPorAtributo(jugadores, atributo, valor) {
+    return jugadores.filter(jugador => {
+        if (valor) {
+            return jugador[atributo].toString().toLowerCase()
         }
-    
-        function filtrarnombre (jugador){
-            if (nombre){
-                return jugador.nombre == nombre
-            }
-            else {
-                return jugador
-            };
-
+        else {
+            return true;
         }
-        function filtrarposicion (jugador){
-            if (posicion){
-                return jugador.posicion == posicion
-            }
-            else {
-                return jugador
-            };
+    })
+}
 
-        }
-        function filtrarvalor (jugador){
-            if (valor){
-                return jugador.valor == valor
-            }
-            else {
-                return jugador
-            };
+function filtrarjugadores(jugadores) {
+    const resultado = filtrarJugadoresPorAtributo(jugadores, 'nombre', nombreJugador)
+    .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'posicion', posicion).length > 0)
+    .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'valor', valor).length > 0)
+    .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'estado', estado).length > 0)
+    .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'club', club).length > 0);
 
-        }
-        function filtrarestado (jugador){
-            if (estado){
-                return jugador.estado == estado
-            }
-            else {
-                return jugador
-            };
+    console.log('resultado del filtro:');
+    if (resultado.length > 0) {
+        mostrarjugadores(resultado);
+    }
+    else {
+        console.error('no se ha encontrado el jugador');
+    }
 
-        }
-        function filtrarclub (jugador){
-            if (club){
-                return jugador.club == club
-            }
-            else {
-                return jugador
-            };
+}
+filtrarjugadores(jugadores)
 
-            
-    
-        }
-        function encontrarjugadores (){
-            const resultado2 = jugadores.find (encontrarnombre).find (encontrarposicion).find (encontrarvalor).find (encontrarestado).find (encontrarclub)
-                if (resultado2.length > 0){
-                    mostrarjugadores (resultado2)
-                }
-                else{
-                    console.log ('no se ha encontrado el jugador');
-                }
-            }
-        
-            function encontrarnombre (jugador){
-                if (nombre){
-                    return jugador.nombre == nombre
-                }
-                else {
-                    return jugador
-                };
-    
-            }
-            function encontrarposicion (jugador){
-                if (posicion){
-                    return jugador.posicion == posicion
-                }
-                else {
-                    return jugador
-                };
-    
-            }
-            function encontrarvalor (jugador){
-                if (valor){
-                    return jugador.valor == valor
-                }
-                else {
-                    return jugador
-                };
-    
-            }
-            function encontrarestado (jugador){
-                if (estado){
-                    return jugador.estado == estado
-                }
-                else {
-                    return jugador
-                };
-    
-            }
-            function encontrarclub (jugador){
-                if (club){
-                    return jugador.club == club
-                }
-                else {
-                    return jugador
-                };
-    
-            }
+function encontrarjugadores(jugadores){
+    const encontrar = jugadores.find(i => i.nombre.toLowerCase() === nombreJugador.toLowerCase())
+    if (encontrar) {
+        console.log(
+            encontrar.nombre + '-'
+            + encontrar.posicion + '-'
+            + encontrar.valor + '-'
+            + encontrar.estado + '-'
+            + encontrar.club + '-'
+        )
+    } else {
+
+        console.log("no se ha encontrado el jugador");
+
+    }
+
+}
+encontrarjugadores(jugadores)
