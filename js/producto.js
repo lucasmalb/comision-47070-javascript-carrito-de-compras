@@ -1,6 +1,5 @@
 
-
-let nombreJugador = prompt ('indique el nombre del jugadr que desea comprar')
+let nombre = prompt ('indique el nombre del jugador')
 let posicion = prompt('indique la posicion del jugador')
 let valor = prompt('indique el monto que piensa gastar')
 let estado = prompt('indique en que estado de tranderencia quiere buscar aljugador' + '1 cedible' + '\n'
@@ -26,10 +25,10 @@ function filtrarJugadoresPorAtributo(jugadores, atributo, valor) {
             return true;
         }
     })
-}
+};
 
 function filtrarjugadores(jugadores) {
-    const resultado = filtrarJugadoresPorAtributo(jugadores, 'nombre', nombreJugador)
+    const resultado = filtrarJugadoresPorAtributo(jugadores, 'nombre', nombre)
     .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'posicion', posicion).length > 0)
     .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'valor', valor).length > 0)
     .filter(jugador => filtrarJugadoresPorAtributo([jugador], 'estado', estado).length > 0)
@@ -43,11 +42,11 @@ function filtrarjugadores(jugadores) {
         console.error('no se ha encontrado el jugador');
     }
 
-}
+};
 filtrarjugadores(jugadores)
 
-function encontrarjugadores(jugadores){
-    const encontrar = jugadores.find(i => i.nombre.toLowerCase() === nombreJugador.toLowerCase())
+function encontrarjugadores(jugadores){    
+const encontrar = jugadores.find(i => i.nombre.toLowerCase() === nombre.toLowerCase())
     if (encontrar) {
         console.log(
             encontrar.nombre + '-'
@@ -62,5 +61,5 @@ function encontrarjugadores(jugadores){
 
     }
 
-}
+};
 encontrarjugadores(jugadores)
