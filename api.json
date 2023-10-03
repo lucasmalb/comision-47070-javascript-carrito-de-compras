@@ -1,0 +1,62 @@
+[
+    {
+        "precio": 350,
+        "id": 1,
+        "titulo": "leche serenisima",
+        "foto": "url"
+    },
+    {
+        "precio": 500,
+        "id": 2,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 5100,
+        "id": 3,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 1300,
+        "id": 4,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 600,
+        "id": 5,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 250,
+        "id": 6,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 100,
+        "id": 7,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 1200,
+        "id": 8,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 800,
+        "id": 9,
+        "titulo": "cafe",
+        "foto": "url"
+    },
+    {
+        "precio": 1000,
+        "id": 10,
+        "titulo": "cafe",
+        "foto": "url"
+    }
+    ]
