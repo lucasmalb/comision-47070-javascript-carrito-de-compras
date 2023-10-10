@@ -6,15 +6,25 @@ const templateCard = document.getElementById('template-card').content;
 const templateCarrito = document.getElementById('template-carrito').content;
 const templateFooter = document.getElementById('template-footer').content;
 const fragment = document.createDocumentFragment();
+const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
 let carrito = {};
 
 document.addEventListener('click', e => {
     addCarrito(e);
 });
 
+
+/*vaciarCarritoBtn.addEventListener('click', e => {
+    addCarrito = (e);
+    pintarCarrito();
+    guardarCarritoEnLocalStorage(); 
+});*/
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchData();
+    cargarCarritoDesdeLocalStorage();
 });
+
 
 const fetchData = async () => {
     try {
@@ -26,18 +36,7 @@ const fetchData = async () => {
     }
 };
 
-/*const pintarCards = data => {
-    data.forEach(producto => {
-        templateCard.querySelector('h5').textContent = producto.titulo;
-        templateCard.querySelector('p').textContent = producto.precio;
-        templateCard.querySelector('img').setAttribute('src', producto.foto);
-        templateCard.querySelector('.btn-dark').dataset.id = producto.id;
 
-        const clone = templateCard.cloneNode(true);
-        fragment.appendChild(clone);
-    });
-    cards.appendChild(fragment);
-};*/
 const pintarCards = data => {
     data.forEach(producto => {
         const clone = templateCard.cloneNode(true); // Clona la plantilla
@@ -72,6 +71,16 @@ const setCarrito = objeto => {
     carrito[producto.id] = { ...producto };
     pintarCarrito();
 };
+const guardarCarritoEnLocalStorage = () => {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+};
+
+const cargarCarritoDesdeLocalStorage = () => {
+    if (localStorage.getItem('carrito')) {
+        carrito = JSON.parse(localStorage.getItem('carrito')); // Recupera el carrito desde el localStorage
+        pintarCarrito();
+    }
+};
 
 const pintarCarrito = () => {
     Items.innerHTML = '';
@@ -80,7 +89,7 @@ const pintarCarrito = () => {
         templateCarrito.querySelectorAll('td')[0].textContent = producto.titulo;
         templateCarrito.querySelectorAll('td')[1].textContent = producto.cantidad;
         templateCarrito.querySelector('.btn-info').dataset.id = producto.id;
-        templateCarrito.querySelector('.btn-danger').dataset.id = producto.id;
+        templateCarrito.querySelector('.btn-secondary').dataset.id = producto.id;
         templateCarrito.querySelector('span').textContent = producto.cantidad * parseFloat(producto.precio);
 
         const clone = templateCarrito.cloneNode(true);
@@ -131,7 +140,7 @@ const btnAccion = (e) => {
         pintarCarrito();
     }
 
-    if (e.target.classList.contains('btn-danger')) {
+    if (e.target.classList.contains('btn-secondary')) {
         // Acción de disminuir
         const producto = carrito[e.target.dataset.id];
         producto.cantidad--;

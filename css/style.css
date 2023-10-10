@@ -1,0 +1,17 @@
+.color{
+    color: rgb(64, 64, 67);
+}
+.color1{
+    color: rgb(169, 169, 179);
+}
+.btn-secondary {
+    background-color:rgb(116, 79, 88) ;
+}
+
+.btn-info{
+    background-color: orangered!important;
+}
+
+.card{
+    background-color: rgb(241, 31, 31) !important;
+}
