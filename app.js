@@ -5,8 +5,7 @@ const templateCard = document.getElementById('template-card').content;
 const templateCarrito = document.getElementById('template-carrito').content;
 const templateFooter = document.getElementById('template-footer').content;
 const fragment = document.createDocumentFragment();
-const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
-let carrito = {};
+let carrito = [];
 
 document.addEventListener('click', e => {
     addCarrito(e);
@@ -119,6 +118,13 @@ const pintarFooter = () => {
     row.appendChild(colTotal);
     row.appendChild(botonVaciar);  // Agregar el botón "Vaciar Carrito" al footer
     footer.appendChild(row);
+
+    const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+    vaciarCarritoBtn.addEventListener('click', () => {
+    carrito = {}; 
+    pintarCarrito(); 
+    guardarCarritoEnLocalStorage(); 
+});
 };
 
 cards.addEventListener('click', e => {
@@ -152,8 +158,5 @@ const btnAccion = e => {
 };
 
 
-vaciarCarritoBtn.addEventListener('click', () => {
-    carrito = {}; 
-    pintarCarrito(); 
-    guardarCarritoEnLocalStorage(); 
-});
+
+
