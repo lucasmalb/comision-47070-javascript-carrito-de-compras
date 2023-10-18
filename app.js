@@ -5,7 +5,7 @@ const templateCard = document.getElementById('template-card').content;
 const templateCarrito = document.getElementById('template-carrito').content;
 const templateFooter = document.getElementById('template-footer').content;
 const fragment = document.createDocumentFragment();
-let carrito = [];
+let carrito = [] || JSON.parse(localStorage.getItem("carrito")) || [];
 
 document.addEventListener('click', e => {
     addCarrito(e);
@@ -44,6 +44,7 @@ const addCarrito = e => {
         setCarrito(e.target.parentElement);
     }
     e.stopPropagation();
+    guardarCarritoEnLocalStorage();
 };
 
 const setCarrito = objeto => {
@@ -54,13 +55,17 @@ const setCarrito = objeto => {
         cantidad: 1
     };
 
-    if (carrito.hasOwnProperty(producto.id)) {
-        producto.cantidad = carrito[producto.id].cantidad + 1;
+    const carritoProducto = carrito.find(item => item.id === producto.id);
+
+    if (carritoProducto) {
+        carritoProducto.cantidad++;
+    } else {
+        carrito.push(producto);
     }
 
-    carrito[producto.id] = { ...producto };
     pintarCarrito();
 };
+
 
 const guardarCarritoEnLocalStorage = () => {
     localStorage.setItem('carrito', JSON.stringify(carrito));
@@ -75,7 +80,7 @@ const cargarCarritoDesdeLocalStorage = () => {
 
 const pintarCarrito = () => {
     Items.innerHTML = '';
-    Object.values(carrito).forEach(producto => {
+    carrito.forEach(producto => {
         templateCarrito.querySelector('th').textContent = producto.id;
         templateCarrito.querySelectorAll('td')[0].textContent = producto.titulo;
         templateCarrito.querySelectorAll('td')[1].textContent = producto.cantidad;
@@ -92,8 +97,8 @@ const pintarCarrito = () => {
 
 const pintarFooter = () => {
     footer.innerHTML = '';
-    const totalQuantity = Object.values(carrito).reduce((acc, { cantidad }) => acc + cantidad, 0);
-    const totalPrice = Object.values(carrito).reduce((acc, { cantidad, precio }) => acc + cantidad * parseFloat(precio), 0);
+    const totalQuantity = carrito.reduce((acc, { cantidad }) => acc + cantidad, 0);
+    const totalPrice = carrito.reduce((acc, { cantidad, precio }) => acc + cantidad * parseFloat(precio), 0);
 
     const row = document.createElement('tr');
     const colCantidad = document.createElement('td');
@@ -121,10 +126,10 @@ const pintarFooter = () => {
 
     const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
     vaciarCarritoBtn.addEventListener('click', () => {
-    carrito = {}; 
-    pintarCarrito(); 
-    guardarCarritoEnLocalStorage(); 
-});
+        carrito = [];
+        pintarCarrito();
+
+    });
 };
 
 cards.addEventListener('click', e => {
@@ -140,7 +145,7 @@ const btnAccion = e => {
         // Acción de aumentar
         const producto = carrito[e.target.dataset.id];
         producto.cantidad++;
-        carrito[e.target.dataset.id] = { ...producto };
+        carrito[e.target.dataset.id] =producto ;
         pintarCarrito();
     }
 
@@ -151,7 +156,7 @@ const btnAccion = e => {
         if (producto.cantidad === 0) {
             delete carrito[e.target.dataset.id];
         } else {
-            carrito[e.target.dataset.id] = { ...producto };
+            carrito[e.target.dataset.id] = producto ;
         }
         pintarCarrito();
     }
