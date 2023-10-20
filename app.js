@@ -93,20 +93,20 @@ const pintarCarrito = () => {
         fragment.appendChild(clone);
     });
     Items.appendChild(fragment);
+
+    carrito.forEach(producto => {
+        const btnInfo = document.querySelector(`.btn-info[data-id ="${producto.id}"]`);
+        const btnSecondary = document.querySelector(`.btn-secondary[data-id ="${producto.id}"]`);
+    
+        btnInfo.addEventListener('click',(e) =>{
+            btnAccion(e, producto.id);
+        })
+        btnSecondary.addEventListener('click',(e) =>{
+            btnAccion(e, producto.id);
+        })
+    })
 };
 
-carrito.forEach(producto => {
-    const btnInfo = items.querySelector(`.btn-info[data-id ="${producto.id}"]`);
-    const btnSecondary = items.querySelector(`.btn-secondary[data-id ="${producto.id}"]`);
-
-    btnInfo.addEventListener('click',(e) =>{
-        btnAccion(e, producto.id);
-    })
-    btnSecondary.addEventListener('click',(e) =>{
-        btnAccion(e, producto.id);
-    })
-})
-pintarFooter ()
 
 const pintarFooter = () => {
     footer.innerHTML = '';
@@ -161,6 +161,10 @@ const btnAccion = (e,prodid)=>{
 
     pintarCarrito ();
 };
+pintarFooter ()
+
+
+
 
 
 
