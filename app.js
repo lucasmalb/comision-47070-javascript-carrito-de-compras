@@ -5,7 +5,8 @@ const templateCard = document.getElementById('template-card').content;
 const templateCarrito = document.getElementById('template-carrito').content;
 const templateFooter = document.getElementById('template-footer').content;
 const fragment = document.createDocumentFragment();
-let carrito = [] || JSON.parse(localStorage.getItem("carrito")) || [];
+let carrito =  JSON.parse(localStorage.getItem("carrito")) || [];
+localStorage.clear();
 
 document.addEventListener('click', e => {
     addCarrito(e);
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const fetchData = async () => {
     try {
-        const res = await fetch('api.json');
+        const res = await fetch('./api.json');
         const data = await res.json();
         pintarCards(data);
     } catch (error) {
@@ -92,8 +93,20 @@ const pintarCarrito = () => {
         fragment.appendChild(clone);
     });
     Items.appendChild(fragment);
-    pintarFooter();
 };
+
+carrito.forEach(producto => {
+    const btnInfo = items.querySelector(`.btn-info[data-id ="${producto.id}"]`);
+    const btnSecondary = items.querySelector(`.btn-secondary[data-id ="${producto.id}"]`);
+
+    btnInfo.addEventListener('click',(e) =>{
+        btnAccion(e, producto.id);
+    })
+    btnSecondary.addEventListener('click',(e) =>{
+        btnAccion(e, producto.id);
+    })
+})
+pintarFooter ()
 
 const pintarFooter = () => {
     footer.innerHTML = '';
@@ -135,32 +148,20 @@ const pintarFooter = () => {
 cards.addEventListener('click', e => {
     addCarrito(e);
 });
-
-Items.addEventListener('click', e => {
-    btnAccion(e);
-});
-
-const btnAccion = e => {
-    if (e.target.classList.contains('btn-info')) {
-        // Acción de aumentar
-        const producto = carrito[e.target.dataset.id];
-        producto.cantidad++;
-        carrito[e.target.dataset.id] =producto ;
-        pintarCarrito();
+const btnAccion = (e,prodid)=>{
+    const producto = carrito.find (item => item.id == prodid);
+    if (e.target.classList.contains ('btn-info')){
+        producto.cantidad++
     }
 
-    if (e.target.classList.contains('btn-secondary')) {
-        // Acción de disminuir
-        const producto = carrito[e.target.dataset.id];
-        producto.cantidad--;
-        if (producto.cantidad === 0) {
-            delete carrito[e.target.dataset.id];
-        } else {
-            carrito[e.target.dataset.id] = producto ;
-        }
-        pintarCarrito();
+    if (e.target.classList.contains ('btn-secondary')){
+        producto.cantidad--
     }
+    carrito = carrito.filter(item => item.cantidad > 0);
+
+    pintarCarrito ();
 };
+
 
 
 
