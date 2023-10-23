@@ -1,35 +1,30 @@
-$(document).ready(function () {
-    const cards = $('#cards');
-    const Items = $('#items');
-    const footer = $('#footer');
-    const templateCard = $('#template-card').contents();
-    const templateCarrito = $('#template-carrito').contents();
-    const templateFooter = $('#template-footer').contents();
-    const fragment = $(document.createDocumentFragment());
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    localStorage.clear();
+const cards = document.getElementById('cards');
+const Items = document.getElementById('items');
+const footer = document.getElementById('footer');
+const templateCard = document.getElementById('template-card').content;
+const templateCarrito = document.getElementById('template-carrito').content;
+const templateFooter = document.getElementById('template-footer').content;
+const fragment = document.createDocumentFragment();
+let carrito = [] || JSON.parse(localStorage.getItem("carrito")) || [];
 
-    $(document).on('click', e => {
-        addCarrito(e);
-    });
+document.addEventListener('click', e => {
+    addCarrito(e);
+});
 
     $(document).ready(() => {
         fetchData();
         cargarCarritoDesdeLocalStorage();
     });
 
-    const fetchData = () => {
-        $.ajax({
-            url: './api.json',
-            dataType: 'json',
-            success: function (data) {
-                pintarCards(data);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    };
+const fetchData = async () => {
+    try {
+        const res = await fetch('api.json');
+        const data = await res.json();
+        pintarCards(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
     const pintarCards = data => {
         data.forEach(producto => {
@@ -82,32 +77,22 @@ $(document).ready(function () {
         }
     };
 
-    const pintarCarrito = () => {
-        Items.empty();
-        carrito.forEach(producto => {
-            const clone = templateCarrito.clone(true);
-            clone.find('th').text(producto.id);
-            clone.find('td').eq(0).text(producto.titulo);
-            clone.find('td').eq(1).text(producto.cantidad);
-            clone.find('.btn-info').data('id', producto.id);
-            clone.find('.btn-secondary').data('id', producto.id);
-            clone.find('span').text(producto.cantidad * parseFloat(producto.precio));
+const pintarCarrito = () => {
+    Items.innerHTML = '';
+    carrito.forEach(producto => {
+        templateCarrito.querySelector('th').textContent = producto.id;
+        templateCarrito.querySelectorAll('td')[0].textContent = producto.titulo;
+        templateCarrito.querySelectorAll('td')[1].textContent = producto.cantidad;
+        templateCarrito.querySelector('.btn-info').dataset.id = producto.id;
+        templateCarrito.querySelector('.btn-secondary').dataset.id = producto.id;
+        templateCarrito.querySelector('span').textContent = producto.cantidad * parseFloat(producto.precio);
 
-            const btnInfo = clone.find('.btn-info');
-            btnInfo.on('click', () => {
-                btnAccion(producto.id, 'incrementar');
-            });
-
-            const btnSecondary = clone.find('.btn-secondary');
-            btnSecondary.on('click', () => {
-                btnAccion(producto.id, 'decrementar');
-            });
-
-            fragment.append(clone);
-        });
-        Items.append(fragment);
-        pintarFooter();
-    };
+        const clone = templateCarrito.cloneNode(true);
+        fragment.appendChild(clone);
+    });
+    Items.appendChild(fragment);
+    pintarFooter();
+};
 
     const pintarFooter = () => {
         footer.empty();
@@ -144,23 +129,36 @@ $(document).ready(function () {
         });
     };
 
-    const btnAccion = (prodid, accion) => {
-        const producto = carrito.find(item => item.id === prodid);
-
-        if (accion === 'incrementar') {
-            producto.cantidad++;
-        }
-
-        if (accion === 'decrementar') {
-            producto.cantidad--;
-            if (producto.cantidad === 0) {
-                carrito = carrito.filter(item => item.id !== prodid);
-            }
-        }
-
-        pintarCarrito();
-        guardarCarritoEnLocalStorage();
-    };
-
-    pintarFooter();
+cards.addEventListener('click', e => {
+    addCarrito(e);
 });
+
+Items.addEventListener('click', e => {
+    btnAccion(e);
+});
+
+const btnAccion = e => {
+    if (e.target.classList.contains('btn-info')) {
+        // Acción de aumentar
+        const producto = carrito[e.target.dataset.id];
+        producto.cantidad++;
+        carrito[e.target.dataset.id] =producto ;
+        pintarCarrito();
+    }
+
+    if (e.target.classList.contains('btn-secondary')) {
+        // Acción de disminuir
+        const producto = carrito[e.target.dataset.id];
+        producto.cantidad--;
+        if (producto.cantidad === 0) {
+            delete carrito[e.target.dataset.id];
+        } else {
+            carrito[e.target.dataset.id] = producto ;
+        }
+        pintarCarrito();
+    }
+};
+
+
+
+
