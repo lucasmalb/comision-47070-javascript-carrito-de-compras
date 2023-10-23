@@ -1,166 +1,166 @@
-const cards = document.getElementById('cards');
-const Items = document.getElementById('items');
-const footer = document.getElementById('footer');
-const templateCard = document.getElementById('template-card').content;
-const templateCarrito = document.getElementById('template-carrito').content;
-const templateFooter = document.getElementById('template-footer').content;
-const fragment = document.createDocumentFragment();
-let carrito =  JSON.parse(localStorage.getItem("carrito")) || [];
-localStorage.clear();
+$(document).ready(function () {
+    const cards = $('#cards');
+    const Items = $('#items');
+    const footer = $('#footer');
+    const templateCard = $('#template-card').contents();
+    const templateCarrito = $('#template-carrito').contents();
+    const templateFooter = $('#template-footer').contents();
+    const fragment = $(document.createDocumentFragment());
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    localStorage.clear();
 
-document.addEventListener('click', e => {
-    addCarrito(e);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetchData();
-    cargarCarritoDesdeLocalStorage();
-});
-
-const fetchData = async () => {
-    try {
-        const res = await fetch('./api.json');
-        const data = await res.json();
-        pintarCards(data);
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-const pintarCards = data => {
-    data.forEach(producto => {
-        const clone = templateCard.cloneNode(true);
-        clone.querySelector('h5').textContent = producto.titulo;
-        clone.querySelector('p').textContent = producto.precio;
-        clone.querySelector('img').setAttribute('src', producto.foto);
-        clone.querySelector('.btn-dark').dataset.id = producto.id;
-
-        fragment.appendChild(clone);
+    $(document).on('click', e => {
+        addCarrito(e);
     });
-    cards.appendChild(fragment);
-};
 
-const addCarrito = e => {
-    if (e.target.classList.contains('btn-dark')) {
-        setCarrito(e.target.parentElement);
-    }
-    e.stopPropagation();
-    guardarCarritoEnLocalStorage();
-};
+    $(document).ready(() => {
+        fetchData();
+        cargarCarritoDesdeLocalStorage();
+    });
 
-const setCarrito = objeto => {
-    const producto = {
-        id: objeto.querySelector('.btn-dark').dataset.id,
-        titulo: objeto.querySelector('h5').textContent,
-        precio: objeto.querySelector('p').textContent,
-        cantidad: 1
+    const fetchData = () => {
+        $.ajax({
+            url: './api.json',
+            dataType: 'json',
+            success: function (data) {
+                pintarCards(data);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
     };
 
-    const carritoProducto = carrito.find(item => item.id === producto.id);
+    const pintarCards = data => {
+        data.forEach(producto => {
+            const clone = templateCard.clone(true);
+            clone.find('h5').text(producto.titulo);
+            clone.find('p').text(producto.precio);
+            clone.find('img').attr('src', producto.foto);
+            clone.find('.btn-dark').data('id', producto.id);
 
-    if (carritoProducto) {
-        carritoProducto.cantidad++;
-    } else {
-        carrito.push(producto);
-    }
+            fragment.append(clone);
+        });
+        cards.append(fragment);
+    };
 
-    pintarCarrito();
-};
+    const addCarrito = e => {
+        if ($(e.target).hasClass('btn-dark')) {
+            setCarrito($(e.target).closest('div.card'));
+        }
+        e.stopPropagation();
+        guardarCarritoEnLocalStorage();
+    };
 
+    const setCarrito = objeto => {
+        const producto = {
+            id: objeto.find('.btn-dark').data('id'),
+            titulo: objeto.find('h5').text(),
+            precio: objeto.find('p').text(),
+            cantidad: 1
+        };
 
-const guardarCarritoEnLocalStorage = () => {
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-};
+        const carritoProducto = carrito.find(item => item.id === producto.id);
 
-const cargarCarritoDesdeLocalStorage = () => {
-    if (localStorage.getItem('carrito')) {
-        carrito = JSON.parse(localStorage.getItem('carrito'));
+        if (carritoProducto) {
+            carritoProducto.cantidad++;
+        } else {
+            carrito.push(producto);
+        }
+
         pintarCarrito();
-    }
-};
+    };
 
-const pintarCarrito = () => {
-    Items.innerHTML = '';
-    carrito.forEach(producto => {
-        templateCarrito.querySelector('th').textContent = producto.id;
-        templateCarrito.querySelectorAll('td')[0].textContent = producto.titulo;
-        templateCarrito.querySelectorAll('td')[1].textContent = producto.cantidad;
-        templateCarrito.querySelector('.btn-info').dataset.id = producto.id;
-        templateCarrito.querySelector('.btn-secondary').dataset.id = producto.id;
-        templateCarrito.querySelector('span').textContent = producto.cantidad * parseFloat(producto.precio);
+    const guardarCarritoEnLocalStorage = () => {
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    };
 
-        const clone = templateCarrito.cloneNode(true);
-        fragment.appendChild(clone);
-    });
-    Items.appendChild(fragment);
-};
+    const cargarCarritoDesdeLocalStorage = () => {
+        if (localStorage.getItem('carrito')) {
+            carrito = JSON.parse(localStorage.getItem('carrito'));
+            pintarCarrito();
+        }
+    };
 
-carrito.forEach(producto => {
-    const btnInfo = items.querySelector(`.btn-info[data-id ="${producto.id}"]`);
-    const btnSecondary = items.querySelector(`.btn-secondary[data-id ="${producto.id}"]`);
+    const pintarCarrito = () => {
+        Items.empty();
+        carrito.forEach(producto => {
+            const clone = templateCarrito.clone(true);
+            clone.find('th').text(producto.id);
+            clone.find('td').eq(0).text(producto.titulo);
+            clone.find('td').eq(1).text(producto.cantidad);
+            clone.find('.btn-info').data('id', producto.id);
+            clone.find('.btn-secondary').data('id', producto.id);
+            clone.find('span').text(producto.cantidad * parseFloat(producto.precio));
 
-    btnInfo.addEventListener('click',(e) =>{
-        btnAccion(e, producto.id);
-    })
-    btnSecondary.addEventListener('click',(e) =>{
-        btnAccion(e, producto.id);
-    })
-})
-pintarFooter ()
+            const btnInfo = clone.find('.btn-info');
+            btnInfo.on('click', () => {
+                btnAccion(producto.id, 'incrementar');
+            });
 
-const pintarFooter = () => {
-    footer.innerHTML = '';
-    const totalQuantity = carrito.reduce((acc, { cantidad }) => acc + cantidad, 0);
-    const totalPrice = carrito.reduce((acc, { cantidad, precio }) => acc + cantidad * parseFloat(precio), 0);
+            const btnSecondary = clone.find('.btn-secondary');
+            btnSecondary.on('click', () => {
+                btnAccion(producto.id, 'decrementar');
+            });
 
-    const row = document.createElement('tr');
-    const colCantidad = document.createElement('td');
-    const botonVaciar = document.createElement('button');
-    botonVaciar.textContent = 'Vaciar Carrito';
-    botonVaciar.setAttribute('id', 'vaciar-carrito');
-    botonVaciar.classList.add('btn');
-    botonVaciar.classList.add('btn-danger');
-    colCantidad.textContent = 'Total productos';
-    colCantidad.setAttribute('colspan', '2');
+            fragment.append(clone);
+        });
+        Items.append(fragment);
+        pintarFooter();
+    };
 
-    const colBoton = document.createElement('td');
-    colBoton.textContent = totalQuantity;
+    const pintarFooter = () => {
+        footer.empty();
+        const totalQuantity = carrito.reduce((acc, { cantidad }) => acc + cantidad, 0);
+        const totalPrice = carrito.reduce((acc, { cantidad, precio }) => acc + cantidad * parseFloat(precio), 0);
 
-    const colTotal = document.createElement('td');
-    colTotal.setAttribute('colspan', '2');
-    colTotal.classList.add('text-end');
-    colTotal.innerHTML = `Total: $ <span>${totalPrice.toFixed(2)}</span>`;
+        const row = $('<tr></tr>');
+        const colCantidad = $('<td></td>');
+        const botonVaciar = $('<button>Vaciar Carrito</button>');
+        botonVaciar.attr('id', 'vaciar-carrito');
+        botonVaciar.addClass('btn btn-danger');
+        colCantidad.text('Total productos');
+        colCantidad.attr('colspan', '2');
 
-    row.appendChild(colCantidad);
-    row.appendChild(colBoton);
-    row.appendChild(colTotal);
-    row.appendChild(botonVaciar);  // Agregar el botón "Vaciar Carrito" al footer
-    footer.appendChild(row);
+        const colBoton = $('<td></td>');
+        colBoton.text(totalQuantity);
 
-    const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
-    vaciarCarritoBtn.addEventListener('click', () => {
-        carrito = [];
+        const colTotal = $('<td></td>');
+        colTotal.attr('colspan', '2');
+        colTotal.addClass('text-end');
+        colTotal.html(`Total: $ <span>${totalPrice.toFixed(2)}</span>`);
+
+        row.append(colCantidad);
+        row.append(colBoton);
+        row.append(colTotal);
+        row.append(botonVaciar);
+        footer.append(row);
+
+        const vaciarCarritoBtn = $('#vaciar-carrito');
+        vaciarCarritoBtn.on('click', () => {
+            carrito = [];
+            pintarCarrito();
+            guardarCarritoEnLocalStorage();
+        });
+    };
+
+    const btnAccion = (prodid, accion) => {
+        const producto = carrito.find(item => item.id === prodid);
+
+        if (accion === 'incrementar') {
+            producto.cantidad++;
+        }
+
+        if (accion === 'decrementar') {
+            producto.cantidad--;
+            if (producto.cantidad === 0) {
+                carrito = carrito.filter(item => item.id !== prodid);
+            }
+        }
+
         pintarCarrito();
+        guardarCarritoEnLocalStorage();
+    };
 
-    });
-};
-
-cards.addEventListener('click', e => {
-    addCarrito(e);
+    pintarFooter();
 });
-const btnAccion = (e,prodid)=>{
-    const producto = carrito.find (item => item.id == prodid);
-    if (e.target.classList.contains ('btn-info')){
-        producto.cantidad++
-    }
-
-    if (e.target.classList.contains ('btn-secondary')){
-        producto.cantidad--
-    }
-    carrito = carrito.filter(item => item.cantidad > 0);
-
-    pintarCarrito ();
-};
-
-
-
